@@ -1,0 +1,12 @@
+ADD 0, A
+MACRO
+ADDS &arg1, &arg2, &arg3
+ADD &arg1
+ADD &arg2
+ADD &arg3
+MEND
+ADDS data1, data2, data3
+data 1 DC 5
+data 2 DC 5
+data 3 DC 5
+END

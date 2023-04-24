@@ -1,0 +1,67 @@
+mdt = []
+mnt = []
+ala = []
+output = []
+mdtc = 0
+
+
+with open("macroCode.txt", "r") as f:
+    while True:
+        line = f.readline()[:-1]
+        if line == "END":
+            break
+        if line == "MACRO":
+            line = f.readline()[:-1]
+            mdt.append(line)
+            line_parts = line.split(" ")
+            mnt.append(line_parts[0] + " " + str(mdtc))
+            mdtc += 1
+
+            if len(line_parts) > 1:
+                for part in line_parts[1:]:
+                    ala.append(part[:-1] if part.count(",") else part)
+
+            while True:
+                line = f.readline()[:-1]
+                if line == "MEND":
+                    break
+                parts = line.split(" ")
+                lineToAdd = parts[0] + " "
+                for part in parts[1:]:
+                    p = part[:-1] if part.count(",") > 0 else part
+                    if p in ala:
+                        index = ala.index(p)
+                        lineToAdd += "#" + str(index)
+                    else:
+                        lineToAdd += p + ", "
+                mdt.append(lineToAdd)
+                mdtc += 1
+            mdt.append("MEND")
+            mdtc += 1
+        else:
+            output.append(line)
+
+output.append(line)
+
+with open("outputCode.txt", "w") as f:
+    for o in output:
+        print(o)
+        f.write(str(o) + "\n")
+
+print("\n")
+with open("mnt.txt", "w") as f:
+    for i, m in enumerate(mnt):
+        print(i, m)
+        f.write(str(i) + " " + str(m) + "\n")
+
+print("\n")
+with open("mdt.txt", "w") as f:
+    for i, m in enumerate(mdt):
+        print(i, m)
+        f.write(str(i) + " " + str(m) + "\n")
+
+print("\n")
+with open("ala.txt", "w") as f:
+    for i, a in enumerate(ala):
+        print(i, a)
+        f.write(str(i) + " " + str(a) + "\n")

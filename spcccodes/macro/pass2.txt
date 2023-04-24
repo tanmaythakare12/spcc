@@ -1,0 +1,61 @@
+mdt = []
+with open("mdt.txt", "r") as m:
+    lines = m.readlines()
+    for line in lines:
+        mdt.append(line[:-1].split(" ")[1:])
+
+print("MDT -->", mdt)
+
+mnt = []
+with open("mnt.txt", "r") as m:
+    lines = m.readlines()
+    for line in lines:
+        mnt.append(line[:-1].split(" ")[1:])
+
+print("MNT -->", mnt)
+
+ala = []
+with open("ala.txt", "r") as a:
+    lines = a.readlines()
+    for line in lines:
+        ala.append(line[:-1].split(" ")[1:])
+
+print("ALA -->", ala)
+
+output = []
+with open("outputCode.txt", "r") as f:
+    while True:
+        line = f.readline()[:-1]
+        if line == "END":
+            break
+        parts = line.split(" ")
+        for m in mnt:
+            if parts[0] in m:
+                arg_count = len(parts) - 1
+                args = []
+
+                for part in parts[1:]:
+                    args.append(part[:-1] if part.count(",") else part)
+
+                for code in mdt[int(m[1]) + 1 :]:
+                    if "MEND" in code:
+                        break
+                    s = ""
+                    for c in code:
+                        if "#" in c:
+                            s += args[-arg_count] + " "
+                            arg_count -= 1
+                        else:
+                            s += c + " "
+                    output.append(s[:-1])
+
+        output.append(line)
+
+    output.append("END")
+
+print("\n\n")
+
+with open("finalOutput.txt", "w") as f:
+    for o in output:
+        print(o)
+        f.write(o + "\n")

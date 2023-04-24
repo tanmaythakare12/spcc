@@ -1,0 +1,6 @@
+ADD 0, A
+ADDS data1, data2, data3
+data 1 DC 5
+data 2 DC 5
+data 3 DC 5
+END

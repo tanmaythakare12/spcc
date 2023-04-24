@@ -1,0 +1,30 @@
+%{
+#include<stdio.h>
+#include<stdlib.h>
+int verb=0,adverb=0,adjective=0;
+%}
+
+%%
+.(ing)|.(to)                  {verb++;}
+.(ly)                         {adverb++;}
+.(ful)|.(able)|.(ous)|.(less) {adjective++;}
+. ;
+%%
+
+int yywrap(void){
+    return 1;
+}
+int main(int argc, char** argv){
+    if(argc>1){
+        FILE *file;
+        file = fopen(argv[1],"r");
+        if (!file){
+            exit(1);
+        }
+        yyin = file;
+
+    }
+    yylex();
+    printf("n(Verbs)=%d \t n(Adverbs)=%d \t n(Adjective)=%d",verb, adverb, adjective);
+    return  0;
+}

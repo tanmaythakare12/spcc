@@ -1,0 +1,94 @@
+import pandas as pd
+
+prod={"E":{"E+T","T"},"T":{"T*F","F"},"F":{"a"}}
+lhs=["E","E","T","T","F",]
+rhs=["E+T","T","T*F","F","a"]
+terminals=['a','*','+','$']
+nonterminals=["E"]
+table={}
+start="E"
+for termv in terminals:
+    temp={}
+    for termx in terminals:
+        temp[termx]=None
+    table[termv]=temp
+
+
+def print_iter( Stack, Input, Action):
+    print( ".".join(Stack).ljust(25), " | ", ".".join(Input).ljust(30), " | ",
+              Action)
+
+for termv in terminals:
+    for termx in terminals:
+        if termv==termx=="a":
+            table[termv][termx] = "-"
+        elif termv==termx=="$":
+            table[termv][termx] = "Acc"
+        elif terminals.index(termv)>terminals.index(termx):
+            table[termv][termx]=">"
+        elif terminals.index(termv)<terminals.index(termx):
+            table[termv][termx] = "<"
+        elif terminals.index(termv)==terminals.index(termx):
+            table[termv][termx] = ">"
+        else:
+            break
+
+df=pd.DataFrame(table)
+print(df)
+string="a.+.b.*.c.*.d.$"
+input=string.split(".")
+input=["a","+","a","*","a","$"]
+stack=["$"]
+print_iter(["Stack"],["Input"],"action")
+status=None
+action=None
+
+
+while True:
+    inp=input[0]
+    stk=stack[-1]
+    for x in reversed(stack):
+        if x in terminals:
+            term = x
+            break
+    if len(input)==1 and inp=="$" and stk==start and len(stack)==2:
+        status=action="accept"
+        break
+    # elif stk in nonterminals:
+    #     stack.append(inp)
+    #     del (input[0])
+    #     action = "shift"
+    elif table[term][inp]==">" :
+        stack.append(inp)
+        del(input[0])
+        action="shift"
+    elif table[term][inp] == "<":
+        # action = "reduce"
+        tempstack = stack
+        str = ""
+        flag=False
+        while stack[-1] != "$":
+            # flag=True
+            x = stack.pop()
+            str = x+str
+            if str in rhs:
+                flag=True
+                # strstack = str.split()
+                stack.append(lhs[rhs.index(str)])
+                action = "reduce:"+lhs[rhs.index(str)]+"->"+str
+                break
+        if flag==False:
+            stack = tempstack
+            status="reject"
+            action="Reject"
+            if status =="reject":
+                break
+    print_iter(stack, input, action)
+
+print(status)
+
+
+
+
+
+#

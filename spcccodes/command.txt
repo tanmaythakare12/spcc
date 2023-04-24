@@ -1,0 +1,7 @@
+  flex filename.l
+        bison filename.y
+        bison -dy filename.y
+        gcc lex.yy.c y.tab.c -o filename.exe
+        filename.exe
+
+
